@@ -15,12 +15,14 @@ export function FeedbackCard({ item, onUpvote }: { item: FeedbackItem; onUpvote:
     <article className="flex items-start gap-4 bg-white border border-border rounded-xl p-5 hover:shadow-md transition-all text-foreground">
       <button
         onClick={onUpvote}
+        aria-label={`Upvote feedback. Current upvotes: ${item.upvotes}`}
+        aria-pressed={item.upvotedByUser}
         className={`flex flex-col items-center justify-center gap-0.5 min-w-[52px] py-2 rounded-lg border transition-all ${
           item.upvotedByUser ? "bg-primary text-white" : "bg-muted text-muted-foreground hover:border-primary"
         }`}
       >
         <ChevronUp size={16} />
-        <span className="text-sm font-bold">{item.upvotes}</span>
+        <span className="text-sm font-bold" aria-hidden="true">{item.upvotes}</span>
       </button>
       <div className="flex-1 min-w-0">
         <h3 className="font-semibold mb-1">{item.title}</h3>

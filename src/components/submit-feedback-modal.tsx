@@ -1,34 +1,93 @@
 "use client";
 
 import { useState } from "react";
-import { X, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { Category } from "@/lib/feedback-data";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
-export function SubmitFeedbackModal({ isOpen, onClose, onSubmit }: { isOpen: boolean, onClose: () => void, onSubmit: (d: any) => void }) {
+export function SubmitFeedbackModal({
+  isOpen,
+  onClose,
+  onSubmit,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (d: { title: string; description: string; category: Category }) => void;
+}) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState<Category>("Feature");
 
-  if (!isOpen) return null;
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit({ title, description, category });
+    setTitle("");
+    setDescription("");
+    setCategory("Feature");
+    onClose();
+  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-white rounded-2xl w-full max-w-lg p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold">Submit Feedback</h2>
-          <button onClick={onClose}><X size={20}/></button>
-        </div>
-        <form onSubmit={e => { e.preventDefault(); onSubmit({ title, description, category }); onClose(); }} className="space-y-4">
-          <input className="w-full p-2 border rounded-lg" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} required />
-          <textarea className="w-full p-2 border rounded-lg h-32" placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} required />
-          <div className="flex gap-2">
-            {["Feature", "Bug", "UX", "Performance"].map(c => (
-              <button key={c} type="button" onClick={() => setCategory(c as Category)} className={`px-3 py-1 rounded-full border text-sm ${category === c ? "bg-primary text-white" : ""}`}>{c}</button>
-            ))}
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Submit Feedback</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4 pt-4">
+          <div className="space-y-2">
+            <Label htmlFor="title">Title</Label>
+            <Input
+              id="title"
+              placeholder="Give your feedback a concise title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
           </div>
-          <button type="submit" className="w-full py-3 bg-primary text-white rounded-xl flex items-center justify-center gap-2"><Send size={16}/> Submit</button>
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              className="h-32"
+              placeholder="Tell us more about your feedback..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Category</Label>
+            <div className="flex flex-wrap gap-2">
+              {(["Feature", "Bug", "UX", "Performance"] as Category[]).map(
+                (c) => (
+                  <Button
+                    key={c}
+                    type="button"
+                    variant={category === c ? "default" : "outline"}
+                    size="sm"
+                    className="rounded-full"
+                    onClick={() => setCategory(c)}
+                  >
+                    {c}
+                  </Button>
+                )
+              )}
+            </div>
+          </div>
+          <Button type="submit" className="w-full py-6 text-base">
+            <Send size={16} /> Submit Feedback
+          </Button>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
