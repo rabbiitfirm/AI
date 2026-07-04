@@ -15,8 +15,10 @@ export function FeedbackCard({ item, onUpvote }: { item: FeedbackItem; onUpvote:
     <article className="flex items-start gap-4 bg-white border border-border rounded-xl p-5 hover:shadow-md transition-all text-foreground">
       <button
         onClick={onUpvote}
-        className={`flex flex-col items-center justify-center gap-0.5 min-w-[52px] py-2 rounded-lg border transition-all ${
-          item.upvotedByUser ? "bg-primary text-white" : "bg-muted text-muted-foreground hover:border-primary"
+        aria-label={`Upvote feedback: ${item.title}`}
+        aria-pressed={item.upvotedByUser}
+        className={`flex flex-col items-center justify-center gap-0.5 min-w-[52px] py-2 rounded-lg border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+          item.upvotedByUser ? "bg-primary text-white border-primary" : "bg-muted text-muted-foreground hover:border-primary"
         }`}
       >
         <ChevronUp size={16} />
