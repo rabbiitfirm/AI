@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Zap } from "lucide-react";
-import { FeedbackItem, Status, Category } from "@/lib/feedback-data";
+import { FeedbackItem, Status } from "@/lib/feedback-data";
 import { FeedbackCard } from "@/components/feedback-card";
 import { StatusFilter } from "@/components/status-filter";
-import { SubmitFeedbackModal } from "@/components/submit-feedback-modal";
+import { SubmitFeedbackModal, SubmitFeedbackData } from "@/components/submit-feedback-modal";
 import { submitFeedback, upvoteFeedback, getFeedback } from "@/app/actions/feedback";
 
 export function FeedbackBoard({ boardId, boardName }: { boardId: number, boardName: string }) {
@@ -13,21 +13,23 @@ export function FeedbackBoard({ boardId, boardName }: { boardId: number, boardNa
   const [activeStatus, setActiveStatus] = useState<Status | "All">("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const loadFeedback = async () => {
+  const loadFeedback = useCallback(async () => {
     const data = await getFeedback(boardId);
     setItems(data as unknown as FeedbackItem[]);
-  };
+  }, [boardId]);
 
-  useEffect(() => { loadFeedback(); }, [boardId]);
+  useEffect(() => {
+    loadFeedback();
+  }, [loadFeedback]);
 
   const handleUpvote = async (id: number) => {
     await upvoteFeedback(id, "user-123");
-    loadFeedback();
+    await loadFeedback();
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: SubmitFeedbackData) => {
     await submitFeedback({ boardId, ...data });
-    loadFeedback();
+    await loadFeedback();
   };
 
   const filtered = activeStatus === "All" ? items : items.filter(i => i.status === activeStatus);
