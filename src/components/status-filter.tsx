@@ -2,7 +2,7 @@
 
 import { Status, STATUS_CONFIG, FeedbackItem } from "@/lib/feedback-data";
 
-export function StatusFilter({ selected, onChange, items }: { selected: Status | "All"; onChange: (s: any) => void; items: FeedbackItem[] }) {
+export function StatusFilter({ selected, onChange, items }: { selected: Status | "All"; onChange: (s: Status | "All") => void; items: FeedbackItem[] }) {
   const statuses: (Status | "All")[] = ["All", "Under Review", "Planned", "In Progress", "Completed"];
   return (
     <nav className="space-y-1 text-foreground">
