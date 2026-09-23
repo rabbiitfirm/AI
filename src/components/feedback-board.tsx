@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { Zap } from "lucide-react";
-import { FeedbackItem, Status, Category } from "@/lib/feedback-data";
+import { FeedbackItem, Status } from "@/lib/feedback-data";
 import { FeedbackCard } from "@/components/feedback-card";
 import { StatusFilter } from "@/components/status-filter";
-import { SubmitFeedbackModal } from "@/components/submit-feedback-modal";
+import { SubmitFeedbackModal, SubmitFeedbackData } from "@/components/submit-feedback-modal";
 import { submitFeedback, upvoteFeedback, getFeedback } from "@/app/actions/feedback";
 
 export function FeedbackBoard({ boardId, boardName }: { boardId: number, boardName: string }) {
@@ -25,7 +25,7 @@ export function FeedbackBoard({ boardId, boardName }: { boardId: number, boardNa
     loadFeedback();
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: SubmitFeedbackData) => {
     await submitFeedback({ boardId, ...data });
     loadFeedback();
   };
