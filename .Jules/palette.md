@@ -1,0 +1,3 @@
+## 2025-10-02 - Form Modal Async Submissions and Accessible Control Groups
+**Learning:** In form modals with async submission handlers, awaiting the parent `onSubmit` callback within a try/finally block before closing ensures `isSubmitting` visual feedback persists until completion and prevents double submissions. Linking form controls with `useId` and adding explicit `role="radiogroup"` / `role="radio"` attributes guarantees proper screen reader announcements.
+**Action:** Always wrap form submission callbacks in an async handler with `isSubmitting` loading states, link `Label` elements using `useId`, and apply explicit ARIA radio roles to single-select option button groups.
